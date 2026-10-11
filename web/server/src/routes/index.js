@@ -186,6 +186,21 @@ router.get(
   })
 );
 
+router.post(
+  '/examples',
+  handle(async (req, res) => {
+    const body = req.body || {};
+    const invalid = validateSource(body.source);
+    if (invalid) {
+      res.status(400).json({ error: invalid });
+      return;
+    }
+    const name = body.name || 'test' + String(Date.now()).slice(-4);
+    const created = await examples.saveExample(name, body.source);
+    res.status(201).json(created);
+  })
+);
+
 /* ----------------------------------------------------------- programs ---- */
 
 function requireDatabase(res) {

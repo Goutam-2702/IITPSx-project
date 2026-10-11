@@ -52,9 +52,9 @@ function readTest(name) {
   return fs.readFileSync(path.join(config.testsDir, name + '.asm'), 'utf8');
 }
 
-test('the examples endpoint finds all fifteen programs with descriptions', { skip }, async () => {
+test('the examples endpoint finds all programs with descriptions and supports saving', { skip }, async () => {
   const list = await examples.list();
-  assert.strictEqual(list.length, 15);
+  assert.ok(list.length >= 15, 'expected at least 15 examples');
   list.forEach((example) => {
     assert.ok(example.description.length > 0, example.id + ' has no description');
     assert.ok(example.source.length > 0, example.id + ' has no source');

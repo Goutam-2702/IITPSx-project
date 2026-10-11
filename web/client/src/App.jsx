@@ -175,6 +175,28 @@ export default function App() {
     }
   }, [dbAvailable, source]);
 
+  const doSaveAsTest = useCallback(async () => {
+    const match = source.match(/;\s*(test[a-zA-Z0-9_-]+)/i);
+    const nextNum = String(examples.length + 1).padStart(2, '0');
+    const defaultName = match ? match[1] : ('test' + nextNum);
+    const name = window.prompt('Save this code as a new test case in tests/ (e.g. test16):', defaultName);
+    if (!name) {
+      return;
+    }
+    setBusy('saving');
+    try {
+      const created = await api.saveExample(name, source);
+      const list = await api.examples();
+      setExamples(list);
+      setFault(null);
+      loadExample(created.id);
+    } catch (err) {
+      setFault(err.message);
+    } finally {
+      setBusy(null);
+    }
+  }, [source, examples, loadExample]);
+
   const download = useCallback(
     (kind) => {
       if (!assembleResult || !assembleResult.objectFileId) {
@@ -379,6 +401,14 @@ export default function App() {
             </option>
           ))}
         </select>
+        <button
+          className="btn"
+          onClick={doSaveAsTest}
+          disabled={Boolean(busy)}
+          title="Save this code as a new test case into tests/ (e.g. test16)"
+        >
+          + New Test
+        </button>
 
         <span className="toolbar-sep" />
 

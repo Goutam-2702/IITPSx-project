@@ -7,20 +7,8 @@ const { config } = require('../config');
 
 /*
  * examples.js - reads tests/*.asm and turns the header comment block into a
- * description.
- *
- * Each test file opens with a block like:
- *
- *   ; test04.asm
- *   ; Purpose : the two IITPSx arithmetic extensions, mul and div.
- *   ; Expected: assembles and runs. 6 * 7 = 42, then 42 / 2 = 21,
- *   ;           so the final value of register A is 21 (0x15).
- *
- * The 'Purpose' text becomes the short description shown in the dropdown and
- * the whole block is kept as the long description.
+ * description. Also allows saving new test cases to tests/.
  */
-
-let cache = null;
 
 function parseHeader(source) {
   const lines = source.split(/\r?\n/);
@@ -29,8 +17,6 @@ function parseHeader(source) {
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i].trim();
     if (line.length === 0) {
-      /* A blank line inside the header block is allowed only before it
-       * starts; once comments have begun, a blank line ends the block. */
       if (header.length > 0) {
         break;
       }
@@ -44,8 +30,6 @@ function parseHeader(source) {
 
   const joined = header.join('\n');
 
-  /* Pull out "Purpose : ..." including any continuation lines, which are the
-   * ones indented under it rather than starting a new "Key :" field. */
   let purpose = '';
   const fieldStart = /^([A-Z][A-Za-z]*)\s*:\s*(.*)$/;
   let collecting = false;
@@ -86,9 +70,6 @@ function classify(name) {
 }
 
 async function list() {
-  if (cache) {
-    return cache;
-  }
   let names;
   try {
     names = await fs.readdir(config.testsDir);
@@ -122,8 +103,33 @@ async function list() {
     });
   }
 
-  cache = examples;
   return examples;
 }
 
-module.exports = { list: list };
+async function saveExample(name, source) {
+  let cleanName = (name || '').trim();
+  if (cleanName.toLowerCase().endsWith('.asm')) {
+    cleanName = cleanName.slice(0, -4);
+  }
+  if (!cleanName || !/^[a-zA-Z0-9_-]+$/.test(cleanName)) {
+    throw new Error('Test case name must contain only letters, numbers, hyphens, and underscores (e.g. test16)');
+  }
+
+  const filename = cleanName + '.asm';
+  const filePath = path.join(config.testsDir, filename);
+  await fs.writeFile(filePath, source, 'utf8');
+
+  const meta = parseHeader(source);
+  return {
+    id: cleanName,
+    file: filename,
+    title: cleanName,
+    description: meta.purpose,
+    header: meta.header,
+    expected: classify(cleanName),
+    lineCount: source.split(/\r?\n/).length,
+    source: source
+  };
+}
+
+module.exports = { list, saveExample };

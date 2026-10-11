@@ -73,6 +73,8 @@ export const api = {
   savePrograms: (title, source) => postJson('/api/programs', { title, source }),
   deleteProgram: (id) => request('/api/programs/' + encodeURIComponent(id), { method: 'DELETE' }),
 
+  saveExample: (name, source) => postJson('/api/examples', { name, source }),
+
   downloadUrl: (objectFileId, kind) =>
     BASE + '/api/download/' + encodeURIComponent(objectFileId) + '/' + kind
 };
