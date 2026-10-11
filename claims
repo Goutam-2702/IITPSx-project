@@ -1,0 +1,99 @@
+CS2102 MiniProject 2026
+IITPSx Processor — Claims
+
+Name: Goutam Kumar Ghosal
+Roll No: 2501CS84
+
+Declaration of authorship
+
+I declare that the implementation submitted for this project is my own work, except for any supplied starter code or other material that has been appropriately acknowledged.
+
+The claims below describe the functionality implemented in my assembler, emulator, and assembly programs. The corresponding test logs and listing files provide evidence of the results.
+
+## 1. General implementation
+
+- Both `asm.c` and `emu.c` are written in C and are intended to compile using the ISO C89 standard.
+- The programs use separate functions for tasks such as parsing instructions, resolving labels, encoding machine words, loading object files, and executing instructions.
+- The code uses named constants and descriptive identifiers to make the implementation easier to follow.
+- The source files include the required project and authorship information.
+- The strict build uses the compiler flags specified in the assignment. The actual build results are recorded in the submitted logs.
+
+## 2. Assembler
+
+- The assembler uses a shared source-processing routine for its two passes. The first pass records label values and instruction addresses, while the second resolves operands and generates machine code.
+- It maintains a symbol table and detects duplicate labels and references to undefined labels.
+- It checks instruction names, operand requirements, label syntax, numeric values, and operand ranges. Errors are reported with the source filename and line number where applicable.
+- It supports decimal, hexadecimal, and octal numbers, as well as signed operands.
+- It generates a binary object file containing 32-bit words, with the opcode in the lowest eight bits and the operand in the upper 24 bits.
+- It produces a human-readable listing file showing addresses, machine-code words, mnemonics, operands, and labels. The assembler also supports the `-dump` listing option.
+- The instruction definitions are stored in a table that records each mnemonic, opcode, and operand type.
+- Unused labels can be reported as warnings without necessarily preventing assembly.
+- The optional `SET` directive is implemented and demonstrated by `test03`.
+- The assembler supports the `mul` and `div` instructions using opcodes 19 and 20.
+
+The supplied specification examples are covered by `test01` through `test04`. Additional valid and invalid inputs are covered by `test05` through `test15`.
+
+## 3. Bubble sort
+
+- The bubble sort program is provided in `test05.asm`.
+- The program assembles successfully, as shown by its build output and listing.
+- The execution log records the program run and the resulting memory contents.
+- The expected sorted array is `1, 2, 3, 4, 5, 7, 8, 9`.
+- `test09` provides an additional test that sorts an array and then selects its median.
+
+The relevant assembly sources, listing files, and execution logs should be included with the submission.
+
+## 4. Emulator
+
+- The emulator loads the binary object files produced by the assembler.
+- It implements the A, B, PC, and SP registers and executes the documented instruction set.
+- It checks memory accesses and program-counter bounds and reports errors for unsupported opcodes and invalid operations.
+- It provides memory-dump options before and after execution, as well as an instruction-trace option and an option to display the instruction set.
+- The `mul` instruction performs multiplication, and `div` performs signed integer division.
+- Division by zero is reported as a runtime error, and the emulator exits unsuccessfully instead of continuing with an invalid result.
+- An instruction limit is used to stop programs that run indefinitely.
+- Invalid shift counts and out-of-range memory accesses are also checked.
+
+The relevant tests include `test04` for multiplication and division, `test11` for division by zero, and `test14` for the instruction limit.
+
+## 5. Test programs and evidence
+
+The additional assembly programs cover different instructions and algorithms:
+
+| Test | Purpose |
+|---|---|
+| `test01` | Valid assembly syntax, labels, and branch offsets |
+| `test02` | Invalid assembly statements and diagnostic handling |
+| `test03` | `SET` directive |
+| `test04` | Multiplication and division; expected result 21 |
+| `test05` | Bubble sort |
+| `test06` | Sum of five numbers; expected result 150 |
+| `test07` | Polynomial evaluation using Horner's method |
+| `test08` | Integer mean using division |
+| `test09` | Median calculation using sorting |
+| `test10` | Arithmetic involving multiplication and division |
+| `test11` | Division-by-zero handling |
+| `test12` | Signed, hexadecimal, octal, and boundary operands |
+| `test13` | Syntax and operand-range error handling |
+| `test14` | Infinite-loop protection |
+| `test15` | Procedure calls, returns, stack operations, and factorial |
+
+Each test should include its assembly source and the corresponding evidence required by the assignment. The `.log` files record actual command output, while the `.lst` files show the generated machine-code listing.
+
+The expected results in the source comments should be compared with the actual outputs before a test is claimed as passing.
+
+## 6. Additional verification
+
+- The instruction encodings and branch offsets have been checked against the assignment examples.
+- The assembler and emulator use a consistent object-file byte order.
+- Both programs are checked using the strict compiler settings required by the assignment.
+- The two assembler passes are checked for consistency in the number of generated words.
+- Where sanitizer testing has been performed, its actual results are recorded in the available logs.
+
+## 7. Limitations and unverified work
+
+The submitted reference executable comparison has not been completed because the reference assembler and emulator were not available in the reported build environment.
+
+Any feature or test that has not been executed and checked should be treated as unverified. A successful compilation alone does not establish that the implementation is functionally correct.
+
+The submitted logs and test artifacts should be used to confirm each claim above.

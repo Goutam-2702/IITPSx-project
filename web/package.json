@@ -1,0 +1,21 @@
+{
+  "name": "iitpsx-bench",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web bench for the CS2102 IITPSx assembler and emulator",
+  "scripts": {
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n api,web -c yellow,cyan \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "start": "concurrently -n api,web -c yellow,cyan \"npm --prefix server start\" \"npm --prefix client run preview\"",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server test",
+    "tools": "make -C ..",
+    "setup": "npm run tools && npm run install:all"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

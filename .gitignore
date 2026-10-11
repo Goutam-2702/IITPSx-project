@@ -1,0 +1,46 @@
+# ==============================================================================
+# IITPSx Project .gitignore
+# ==============================================================================
+
+# Compiled Binaries & Build Directories
+bin/
+*.o
+*.exe
+*.out
+
+# Generated Test Listings and Logs
+listings/
+logs/
+tests/*.o
+tests/*.lst
+
+# Generated Submission Packaging Directory
+# (submission/ is built automatically via 'make submission')
+submission/
+
+# Web Dependencies & Build Artifacts
+node_modules/
+*/node_modules/
+*/*/node_modules/
+web/client/dist/
+
+# Environment Variables & Private Cloud Credentials (Security)
+.env
+*.env
+web/server/.env
+*service-account*.json
+firebase-service-account.json
+
+# Operating System & Editor Metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Scratch Scripts
+__pycache__/
+*.pyc
+humanize.py

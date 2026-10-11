@@ -1,0 +1,25 @@
+# ==========================================================================
+# Makefile - CS2102 MiniProject 2026 (flat submission layout)
+# Name    : Goutam Kumar Ghosal
+# Roll No.: 2501CS84
+#
+#   make        build both tools
+#   make clean  remove build products
+# ==========================================================================
+
+CC     = gcc
+CFLAGS = -std=c89 -pedantic -W -Wall -Wpointer-arith -Wwrite-strings \
+         -Wstrict-prototypes
+
+.PHONY: all clean
+
+all: asm emu
+
+asm: asm.c
+	$(CC) $(CFLAGS) asm.c -o asm
+
+emu: emu.c
+	$(CC) $(CFLAGS) emu.c -o emu
+
+clean:
+	rm -f asm emu *.o
