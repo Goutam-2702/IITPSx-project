@@ -8,6 +8,7 @@ import {
   TracePanel,
   HelpPanel
 } from './components/Panels';
+import NewTestModal from './components/NewTestModal';
 
 const STARTER = `; Press Run, or Ctrl+Enter.
 ; Pick a program from the Examples menu to load one of the fifteen tests.
@@ -45,6 +46,7 @@ export default function App() {
   const [programs, setPrograms] = useState([]);
   const [dbAvailable, setDbAvailable] = useState(false);
   const [dbReason, setDbReason] = useState('');
+  const [showNewTestModal, setShowNewTestModal] = useState(false);
 
   /* step-through state: null means not stepping */
   const [stepIndex, setStepIndex] = useState(null);
@@ -196,6 +198,26 @@ export default function App() {
       setBusy(null);
     }
   }, [source, examples, loadExample]);
+
+  const handleNewTestSaved = useCallback(
+    async (created) => {
+      try {
+        const list = await api.examples();
+        setExamples(list);
+        loadExample(created.id);
+      } catch (err) {
+        setFault(err.message);
+      }
+    },
+    [loadExample]
+  );
+
+  const handleOpenNewTestInWorkbench = useCallback((testName, code) => {
+    setSource(code);
+    setAssembleResult(null);
+    clearRun();
+    setFault(null);
+  }, []);
 
   const download = useCallback(
     (kind) => {
@@ -402,10 +424,11 @@ export default function App() {
           ))}
         </select>
         <button
+          id="btn-open-new-test-modal"
           className="btn"
-          onClick={doSaveAsTest}
+          onClick={() => setShowNewTestModal(true)}
           disabled={Boolean(busy)}
-          title="Save this code as a new test case into tests/ (e.g. test16)"
+          title="Open New Test Case window"
         >
           + New Test
         </button>
@@ -649,6 +672,14 @@ export default function App() {
         ) : null}
         <span className="status-meta">Ctrl+Enter to run</span>
       </footer>
+
+      <NewTestModal
+        isOpen={showNewTestModal}
+        onClose={() => setShowNewTestModal(false)}
+        examplesCount={examples.length}
+        onSaveSuccess={handleNewTestSaved}
+        onOpenInWorkbench={handleOpenNewTestInWorkbench}
+      />
     </div>
   );
 }
