@@ -15,7 +15,7 @@ written in ISO C89.
 │   ├── asm.c             two-pass assembler
 │   └── emu.c             emulator
 ├── tests/
-│   └── test01.asm ..     fifteen test programs, each with a header comment
+│   └── test01.asm ..     sixteen test programs, each with a header comment
 ├── listings/             generated .lst files   (make test)
 ├── logs/                 generated .log files   (make test)
 ├── scripts/
@@ -33,7 +33,7 @@ written in ISO C89.
 ```
 make              # builds bin/asm and bin/emu
 make strict       # clean rebuild with every required warning flag
-make test         # assembles and runs all fifteen tests
+make test         # assembles and runs all test cases (test01 - test16)
 make sanitize     # development check with the address and UB sanitizers
 make submission   # assembles the flat submission/ folder
 make clean

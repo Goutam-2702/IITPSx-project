@@ -5,11 +5,6 @@ const path = require('path');
 
 const { config } = require('../config');
 
-/*
- * examples.js - reads tests/*.asm and turns the header comment block into a
- * description. Also allows saving new test cases to tests/.
- */
-
 function parseHeader(source) {
   const lines = source.split(/\r?\n/);
   const header = [];
@@ -54,8 +49,6 @@ function parseHeader(source) {
   }
   return { purpose: purpose, header: joined };
 }
-
-/* Expected outcome, taken from the project's own test classification. */
 function classify(name) {
   if (name === 'test02' || name === 'test13') {
     return 'assembler failure';
